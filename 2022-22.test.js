@@ -1,42 +1,55 @@
 import {test, expect} from 'vitest'
 
 const checkStepNumbers = (systemNames, stepNumbers) => {
-    let grouppedArr = []
+    let grouppedArr = {}
 
     for(let i=0;i<systemNames.length;i++){
-        const systemName = systemNames[i]
-
-        if(grouppedArr.includes(systemName)){
-            grouppedArr[systemName] = [...grouppedArr[systemName], stepNumbers[i]]
+        if(grouppedArr[systemNames[i]]){
+            grouppedArr[systemNames[i]].push(stepNumbers[i])
         }else{
-            grouppedArr[systemName] = []
+            grouppedArr[systemNames[i]] = [stepNumbers[i]]
         }
     }
 
-    console.log(grouppedArr)
-    return combinedArray;
-    
+    const keys = Object.keys(grouppedArr)
+    for(let i=0;i<keys.length;i++){
+        //Comprobamos que no hayan pasos repetidos
+        if(grouppedArr[keys[i]].length !== new Set(grouppedArr[keys[i]]).size){
+            return false
+        }
+        const pasos = JSON.stringify(grouppedArr[keys[i]])
+        const pasosOrdenados = JSON.stringify(grouppedArr[keys[i]].sort((a,b) => a-b))
+        
+        if(pasos !== pasosOrdenados){
+            return false
+        }
+    }
+
+    return true
 }
 
-const systemNames = ["tree_1", "tree_2", "house", "tree_1", "tree_2", "house"]
-const stepNumbers = [1, 33, 10, 2, 44, 20]
 
-checkStepNumbers(systemNames, stepNumbers) // => true
+test('checkStepNumbers - Test #01: return type', () => {
+    const result = checkStepNumbers(["tree_1", "tree_2", "house", "tree_1", "tree_2", "house"], [1, 33, 10, 2, 44, 20]);
+    expect(typeof result).toBe('boolean');
+});
 
-test('checkStepNumbers(systemNames, stepNumbers) // => true', () => {
-    expect(checkStepNumbers(systemNames, stepNumbers)).toBe(true)
-})
-// tree_1 tiene los pasos: [1, 2]
-// tree_2 tiene los pasos: [33, 44]
-// house tiene los pasos: [10, 20]
+test('checkStepNumbers - Test #02: checkStepNumbers(["tree_1", "tree_2", "house", "tree_1", "tree_2", "house"], [1, 33, 10, 2, 44, 20])', () => {
+    const result = checkStepNumbers(["tree_1", "tree_2", "house", "tree_1", "tree_2", "house"], [1, 33, 10, 2, 44, 20]);
+    expect(result).toBe(true);
+});
 
-// true: Los pasos de cada sistema están en orden estrictamente creciente
+test('checkStepNumbers - Test #03: checkStepNumbers(["tree_1", "tree_1", "house"], [2, 1, 10])', () => {
+    const result = checkStepNumbers(["tree_1", "tree_1", "house"], [2, 1, 10]);
+    expect(result).toBe(false);
+});
 
-test('checkStepNumbers(["tree_1", "tree_1", "house"], [2, 1, 10]) // => false', () => {
-    expect(checkStepNumbers(["tree_1", "tree_1", "house"], [2, 1, 10])).toBe(false)
-})
+test('checkStepNumbers - Test #04: checkStepNumbers(["tree_1", "tree_1", "house"], [1, 2, 10])', () => {
+    const result = checkStepNumbers(["tree_1", "tree_1", "house"], [1, 2, 10]);
+    expect(result).toBe(true);
+});
 
-// tree_1 tiene los pasos: [2, 1]
-// house tiene los pasos: [10]
-
-// false: tree_1 tiene los pasos de forma decreciente
+test('checkStepNumbers - Test #05: checkStepNumbers(["house", "house", "tree_1", "tree_1", "house", "tree_2", "tree_2", "tree_3"], [5, 2, 1, 2, 3, 4, 5, 6])', () => {
+    const result = checkStepNumbers(["house", "house", "tree_1", "tree_1", "house", "tree_2", "tree_2", "tree_3"], [5, 2, 1, 2, 3, 4, 5, 6]);
+    expect(result).toBe(false);
+});
