@@ -32,6 +32,6 @@ function getOptimalPath(path) {
 
 test('getOptimalPath should return the correct optimal path length', () => {
     expect(getOptimalPath([[0], [2, 3]])).toBe(2)
-    //expect(getOptimalPath([[0], [3, 4], [9, 8, 1]])).toBe(5)
+    expect(getOptimalPath([[0], [3, 4], [9, 8, 1]])).toBe(5)
     expect(getOptimalPath([[1], [1, 5], [7, 5, 8], [9, 4, 1, 3]])).toBe(8)
 })
