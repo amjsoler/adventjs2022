@@ -24,7 +24,7 @@ function createCube(size) {
     return cube
 }
 
-console.log(createCube(2))
+console.log(createCube(18))
 test('asdf', ()=> {
 
 })
